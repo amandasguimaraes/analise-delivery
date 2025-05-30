@@ -1,46 +1,88 @@
-# Importando bibliotecas
 import pandas as pd
-import os
+import streamlit as st
+from datetime import datetime
+import numpy as np
 
-# Limpeza do DataFrame
-def clean_data(df1):
-    df_clean = df1.copy()
+# Extraction
+def extract(filepath):
+    """Extrai dados do arquivo CSV"""
+    try:
+        df = pd.read_csv(filepath)
+        #st.info(f"✅ Dados extraídos com sucesso: {df.shape[0]} linhas, {df.shape[1]} colunas")
+        return df
+    except FileNotFoundError:
+        #st.error(f"❌ Arquivo não encontrado: {filepath}")
+        return None
+    except Exception as e:
+        #st.error(f"❌ Erro ao extrair dados: {e}")
+        return None
 
-    columns_to_clean = ['Delivery_person_Age', 'Road_traffic_density',
-                        'City', 'Festival', 'multiple_deliveries']
+# Transformation
+def transform(df):
+    """Transforma e limpa os dados"""
+    df1 = df.copy()
 
-    for col in columns_to_clean:
-        df_clean = df_clean.loc[df_clean[col] != 'NaN '].copy()
+    # Limpeza de colunas textuais
+    text_columns = ['Delivery_person_Age', 'Road_traffic_density', 'City', 'Festival', 'multiple_deliveries']
+    for col in text_columns:
+        df1[col] = df1[col].astype(str).str.strip()
+        df1 = df1[~df1[col].isin(['NaN', 'nan', '', 'null', 'NULL'])].copy()
 
-    df_clean['Delivery_person_Age'] = df_clean['Delivery_person_Age'].astype(int)
-    df_clean['Delivery_person_Ratings'] = df_clean['Delivery_person_Ratings'].astype(float)
-    df_clean['Order_Date'] = pd.to_datetime(df_clean['Order_Date'], format='%Y-%m-%d')
-    df_clean['multiple_deliveries'] = df_clean['multiple_deliveries'].astype(int)
+    # Conversões de tipos
+    df1['Delivery_person_Age'] = pd.to_numeric(df1['Delivery_person_Age'], errors='coerce')
+    df1['Delivery_person_Ratings'] = pd.to_numeric(df1['Delivery_person_Ratings'], errors='coerce')
+    df1['multiple_deliveries'] = pd.to_numeric(df1['multiple_deliveries'], errors='coerce')
+    df1['Order_Date'] = pd.to_datetime(df1['Order_Date'], format='%d-%m-%Y', errors='coerce')
+    df1['Time_Orderd'] = pd.to_datetime(df1['Time_Orderd'], format='%H:%M:%S', errors='coerce')
+    df1['Time_Order_picked'] = pd.to_datetime(df1['Time_Order_picked'], format='%H:%M:%S', errors='coerce')
 
-    string_columns = ['ID', 'Road_traffic_density', 'Type_of_order',
-                      'Type_of_vehicle', 'City', 'Festival']
+    df1['City'] = df1['City'].str.title().str.strip()
+    df1['Weatherconditions'] = df1['Weatherconditions'].str.replace('conditions ', '', regex=False).str.strip()
 
-    for col in string_columns:
-        df_clean[col] = df_clean[col].str.strip()
+    # Tempo de entrega
+    df1['Time_taken(min)'] = df1['Time_taken(min)'].str.extract(r'(\d+)').astype(float)
 
-    df_clean['Time_taken(min)'] = df_clean['Time_taken(min)'].apply(lambda x: x.split('(min) ')[1])
-    df_clean['Time_taken(min)'] = df_clean['Time_taken(min)'].astype(int)
+    # Coordenadas
+    coordinate_columns = ['Restaurant_latitude', 'Restaurant_longitude', 'Delivery_location_latitude', 'Delivery_location_longitude']
+    for col in coordinate_columns:
+        df1[col] = pd.to_numeric(df1[col], errors='coerce')
+    
+    # Validação de coordenadas
+    lat_cols = ['Restaurant_latitude', 'Delivery_location_latitude']
+    lon_cols = ['Restaurant_longitude', 'Delivery_location_longitude']
+    
+    for col in lat_cols:
+        df1.loc[(df1[col] < -90) | (df1[col] > 90), col] = np.nan
+    
+    for col in lon_cols:    
+        df1.loc[(df1[col] < -180) | (df1[col] > 180), col] = np.nan
 
-    return df_clean
+    df1.dropna(subset=['Delivery_person_Age', 'Delivery_person_Ratings', 'Order_Date', 'Time_taken(min)'], inplace=True)
+    
+    return df1
 
-# Para uso via importação
-def load_and_clean_data(filepath):
-    df_raw = pd.read_csv(filepath)
-    df_clean = clean_data(df_raw)
-    return df_clean
+# Loading
+def load(df, output_path):
+    """Salva o DataFrame processado"""
+    try:
+        df.to_csv(output_path, index=False)
+        #print(f"Dataset limpo salvo em: {output_path}")
+        return True
+    except Exception as e:
+        #print(f"Erro ao salvar arquivo: {e}")
+        return False
 
-# Para execução direta (modo script)
-def extract_transform_load(input_file_path, output_file_path):
-    df_raw = pd.read_csv(input_file_path)
-    df_processed = clean_data(df_raw)
-    df_processed.to_csv(output_file_path, index=False)
+# Pipeline ETL
+@st.cache_data
+def run_etl(input_path, output_path):
+    """Executa o pipeline ETL completo"""
+    # Extract
+    df_raw = extract(input_path)
 
-if __name__ == "__main__":
-    input_path = 'data/raw/curry_company_dataset.csv'
-    output_path = 'data/processed/curry_company_processed.csv'
-    extract_transform_load(input_path, output_path)
+    # Transform
+    df_clean = transform(df_raw)
+
+    # Load
+    load(df_clean, output_path)
+
+    return df_clean 
