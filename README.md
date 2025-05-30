@@ -3,6 +3,8 @@ Este projeto apresenta um dashboard estratégico para a Curry Company, uma empre
 
 O desenvolvimento deste dashboard seguiu uma abordagem estruturada e orientada a resultados, garantindo que a solução não apenas exibisse dados, mas fornecesse insights acionáveis para o negócio.
 
+---
+
 ####  1. Definição do Problema
 O ponto de partida foi a identificação da necessidade do CEO por uma visão consolidada do crescimento. As seguintes perguntas guiaram a coleta de requisitos:
 
@@ -12,6 +14,8 @@ O ponto de partida foi a identificação da necessidade do CEO por uma visão co
 - Qual a distância média das entregas, e isso varia por tipo de veículo?
 - Existem diferenças significativas no tempo de entrega durante eventos como festivais?
 
+---
+
 #### 2. Estruturação e Premissas
 Adotamos uma abordagem de "Árvore de Problemas" para desmembrar o desafio e organizar as métricas em visões claras de negócio.
 
@@ -20,8 +24,12 @@ Adotamos uma abordagem de "Árvore de Problemas" para desmembrar o desafio e org
 - O modelo de negócio Marketplace é central para todas as análises.
 - As análises foram divididas em três Visões Estratégicas: Empresa, Restaurantes e Entregadores.
 
+---
+
 #### 3. Priorização
 Focamos na construção de um conjunto de gráficos e tabelas que pudessem ser rapidamente utilizados pelo CEO para obter insights acionáveis e subsidiar decisões estratégicas, permitindo futuras expansões.
+
+---
 
 #### 4. Análise e Desenvolvimento Técnico
 Esta fase foi crucial para transformar dados brutos em insights significativos:
@@ -31,6 +39,8 @@ Esta fase foi crucial para transformar dados brutos em insights significativos:
 - **Construção do Dashboard Interativo:** O Streamlit foi a ferramenta escolhida por sua capacidade de criar interfaces de usuário ricas com poucas linhas de código Python, permitindo a integração fluida de tabelas, gráficos e filtros dinâmicos.
 - **Visualização de Dados:** Geramos gráficos interativos e mapas otimizados para cada KPI, focando na clareza visual e na facilidade de interpretação.
 
+---
+
 #### 5. Apresentação
 O dashboard é dividido em três visões principais, acessíveis através da barra lateral, e todas as páginas contam com filtros interativos por data, cidade, tráfego, clima e tipo de veículo.
 
@@ -38,7 +48,9 @@ O dashboard é dividido em três visões principais, acessíveis através da bar
 - **Visão dos Entregadores:** Monitora a performance e características da nossa força de entrega.
 - **Visão dos Restaurantes:** Acompanha a performance e o impacto nos restaurantes parceiros.
 
-O painel está hospedado e pode ser acessado online através deste link: [INSERIR O LINK DO DASHBOARD AQUI]
+O painel está hospedado e pode ser acessado online através deste link: [\[DASHBOARD\]](https://curry-company-dashboard.streamlit.app/)
+
+---
 
 #### Insights
 Algumas das descobertas mais relevantes obtidas através do dashboard incluem:
@@ -46,6 +58,8 @@ Algumas das descobertas mais relevantes obtidas através do dashboard incluem:
 - **Sazonalidade Diária:** A quantidade de pedidos é significativamente afetada pela hora do dia, sugerindo oportunidades para ações táticas como promoções e reforço logístico em picos.
 - **Impacto do Trânsito:** O trânsito em áreas semi-urbanas apresenta-se consistentemente de moderado a alto, o que impacta diretamente os tempos de entrega e requer atenção estratégica.
 - **Clima e Demanda:** Apesar do clima ensolarado, este apresenta uma maior variância no tempo de entrega, o que pode estar relacionado a picos de maior demanda não linear.
+
+---
 
 #### Próximos Passos e Melhorias Futuras
 Este dashboard é uma ferramenta poderosa, mas há sempre espaço para expansão e aprimoramento:
