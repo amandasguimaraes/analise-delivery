@@ -68,7 +68,7 @@ Este dashboard é uma ferramenta poderosa, mas há sempre espaço para expansão
 - **Análise Preditiva:** Desenvolver modelos para prever a demanda de pedidos, o tempo de entrega e a necessidade de entregadores, otimizando a alocação de recursos.
 - **Análise Financeira:** Incluir novos dados para análises de custo por pedido, lucratividade por cliente (LTV) e custo de aquisição de cliente (CAC).
 - **Integração com Feedback de Clientes:** Incorporar dados de pesquisas de satisfação (NPS/CSAT) e feedback direto para uma visão mais qualitativa do serviço.
-- **Alertas Automatizados:** Implementar um sistema de alertas por e-mail para notificar sobre anomalias em KPIs críticos (ex: queda abrupta de pedidos, aumento súbito do tempo de entrega).
+- **Alertas Automatizados:** Implementar um sistema de alertas por e-mail para notificar sobre anomalias em KPIs críticos (ex: queda de pedidos, aumento do tempo de entrega).
 
 ---
 Fonte de Dados: Este projeto utiliza a base de dados da Comunidade DS.
